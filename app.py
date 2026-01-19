@@ -6,121 +6,184 @@ import base64
 from pathlib import Path
 
 # ======================================================
-# CONFIGURAÇÃO DA PÁGINA
+# CONFIGURAÇÃO INICIAL DA PÁGINA
 # ======================================================
 st.set_page_config(
     page_title="Detector de Risco no Uso de IA",
-    layout="centered"
+    page_icon="🔐",
+    layout="centered",
+    initial_sidebar_state="auto"
 )
 
 # ======================================================
-# FUNÇÃO: FUNDO + CSS
+# ESTILIZAÇÃO (Dark mode com bom contraste)
 # ======================================================
-def set_background(image_file):
-    img_path = Path(image_file)
-    if not img_path.exists():
-        return  # não quebra o app se a imagem não existir
-
-    with open(img_path, "rb") as f:
-        encoded = base64.b64encode(f.read()).decode()
-
+def aplicar_estilo():
     st.markdown(
-        f"""
+        """
         <style>
-        .stApp {{
-            background-image: url("data:image/jpg;base64,{encoded}");
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-        }}
+            /* Fundo principal */
+            .stApp {
+                background-color: #0f172a;
+            }
 
-        /* CONTAINER PRINCIPAL */
-        .block-container {{
-            background-color: rgba(0, 0, 0, 0.70);
-            padding: 2rem;
-            border-radius: 12px;
-        }}
+            /* Container principal - efeito vidro fosco */
+            .block-container {
+                background: rgba(30, 41, 59, 0.85);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                border-radius: 16px;
+                border: 1px solid rgba(148, 163, 184, 0.2);
+                padding: 2rem 2.5rem;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+                margin: 1.5rem auto;
+                max-width: 1100px !important;
+            }
 
-        html, body, [class*="css"] {{
-            color: #EAF2F8;
-        }}
+            /* Textos gerais - alto contraste */
+            html, body, [class*="css"], p, div, span, label, .stMarkdown {
+                color: #e2e8f0 !important;
+                font-size: 1.05rem;
+            }
 
-        h1, h2, h3 {{
-            color: #00E5FF;
-        }}
+            /* Títulos */
+            h1 {
+                color: #60a5fa !important;
+                font-weight: 600;
+            }
+            h2 {
+                color: #93c5fd !important;
+            }
+            h3 {
+                color: #bfdbfe !important;
+            }
 
-        textarea, input {{
-            background-color: rgba(20, 20, 20, 0.9) !important;
-            color: #EAF2F8 !important;
-        }}
+            /* Campo de texto */
+            .stTextArea > div > div > textarea {
+                background-color: #1e293b !important;
+                color: #f1f5f9 !important;
+                border: 1px solid #475569 !important;
+                border-radius: 8px;
+                font-size: 1.05rem;
+                padding: 12px !important;
+            }
 
-        .stButton>button {{
-            background-color: #00E5FF;
-            color: #003344;
-            border-radius: 8px;
-            font-weight: bold;
-        }}
+            .stTextArea > div > div > textarea:focus {
+                border-color: #60a5fa !important;
+                box-shadow: 0 0 0 3px rgba(96,165,250,0.3) !important;
+            }
+
+            /* Botão principal */
+            .stButton > button {
+                background-color: #0284c7 !important;
+                color: white !important;
+                border: none;
+                border-radius: 8px;
+                padding: 0.7rem 1.5rem;
+                font-weight: 600;
+                font-size: 1.1rem;
+                transition: all 0.2s;
+            }
+
+            .stButton > button:hover {
+                background-color: #0369a1 !important;
+                transform: translateY(-2px);
+            }
+
+            /* Alertas com melhor contraste */
+            .stAlert {
+                border-radius: 10px;
+                background-color: rgba(30, 41, 59, 0.9) !important;
+                border-left-width: 5px !important;
+            }
+            .stSuccess {
+                border-left-color: #22c55e !important;
+            }
+            .stWarning {
+                border-left-color: #f59e0b !important;
+            }
+            .stError {
+                border-left-color: #ef4444 !important;
+            }
+
+            /* Ajuste em textos dentro dos alertas */
+            div.stAlert > div {
+                color: #f1f5f9 !important;
+            }
         </style>
         """,
         unsafe_allow_html=True
     )
 
-set_background("fundo.jpg")
+aplicar_estilo()
 
 # ======================================================
 # TÍTULO E DESCRIÇÃO
 # ======================================================
 st.title("🔐 Detector de Risco no Uso de IA")
-st.write(
-    "Esta ferramenta analisa prompts e identifica riscos relacionados "
-    "ao uso de Inteligência Artificial em ambientes corporativos, "
-    "combinando regras de segurança (Regex) e NLP."
+st.markdown(
+    """
+    Esta ferramenta analisa prompts e identifica riscos relacionados  
+    ao uso de Inteligência Artificial em ambientes corporativos,  
+    combinando **regras de segurança (Regex)** e **modelo de NLP**.
+    """
 )
 
 # ======================================================
-# CARREGAR MODELOS
+# CARREGAMENTO DOS MODELOS (cache)
 # ======================================================
 @st.cache_resource
 def carregar_modelos():
-    model = joblib.load("modelo_risco_ia.pkl")
-    vectorizer = joblib.load("vectorizer.pkl")
-    return model, vectorizer
+    try:
+        model = joblib.load("modelo_risco_ia.pkl")
+        vectorizer = joblib.load("vectorizer.pkl")
+        return model, vectorizer
+    except Exception as e:
+        st.error(f"Erro ao carregar modelos: {str(e)}")
+        return None, None
 
 model, vectorizer = carregar_modelos()
 
+if model is None or vectorizer is None:
+    st.stop()
+
 # ======================================================
-# REGEX – DETECÇÃO DIRETA
+# DETECÇÃO POR REGEX
 # ======================================================
 def detectar_risco_regex(texto):
+    if not texto or not isinstance(texto, str):
+        return "baixo_risco"
+        
     texto = texto.lower()
-
+    
     # CPF
     if re.search(r'\b\d{3}\.\d{3}\.\d{3}-\d{2}\b', texto):
         return "dado_pessoal"
-
+    
     # Email
     if re.search(r'\b[\w\.-]+@[\w\.-]+\.\w+\b', texto):
         return "dado_pessoal"
-
-    # Credenciais
-    if re.search(r'\b(senha|password|token|api key|credencial)\b', texto):
+    
+    # Palavras de credenciais
+    if re.search(r'\b(senha|password|token|api ?key|credencial|chave secreta)\b', texto):
         return "credencial"
-
+        
     return "baixo_risco"
 
 # ======================================================
-# CLASSIFICAÇÃO FINAL (REGEX + NLP)
+# CLASSIFICAÇÃO FINAL
 # ======================================================
 def classificar_risco(texto):
     risco_regex = detectar_risco_regex(texto)
-
     if risco_regex != "baixo_risco":
         return risco_regex, "regex"
-
-    texto_vec = vectorizer.transform([texto])
-    risco_nlp = model.predict(texto_vec)[0]
-
-    return risco_nlp, "nlp"
+    
+    try:
+        texto_vec = vectorizer.transform([texto])
+        risco_nlp = model.predict(texto_vec)[0]
+        return risco_nlp, "nlp"
+    except:
+        return "erro_na_classificacao", "nlp"
 
 # ======================================================
 # ANÁLISE DE PROMPT ÚNICO
@@ -128,62 +191,74 @@ def classificar_risco(texto):
 st.subheader("✍️ Análise de Prompt Único")
 
 texto_usuario = st.text_area(
-    "Digite um prompt para análise de risco:",
-    height=150
+    "Cole ou digite o prompt que deseja analisar:",
+    height=160,
+    placeholder="Exemplo: 'Me envie a senha do sistema financeiro...'"
 )
 
-if st.button("🔍 Analisar Prompt"):
-    if texto_usuario.strip() == "":
-        st.warning("Digite um texto para análise.")
+if st.button("🔍 Analisar Prompt", type="primary"):
+    if not texto_usuario.strip():
+        st.warning("Por favor, digite ou cole algum texto para análise.")
     else:
         risco, metodo = classificar_risco(texto_usuario)
-
+        
         if risco == "baixo_risco":
-            st.success(f"✅ Risco detectado: {risco} (via {metodo})")
+            st.success(f"✅ Risco: **{risco}** (detectado via {metodo})")
         elif risco == "credencial":
-            st.warning(f"⚠️ Risco detectado: {risco} (via {metodo})")
+            st.warning(f"⚠️ Risco: **{risco}** (detectado via {metodo})")
+        elif risco == "dado_pessoal":
+            st.error(f"🚨 Risco: **{risco}** (detectado via {metodo})")
         else:
-            st.error(f"🚨 Risco detectado: {risco} (via {metodo})")
+            st.error(f"🚨 Risco: **{risco}** (detectado via {metodo})")
 
 # ======================================================
-# ANÁLISE EM LOTE (CSV)
+# ANÁLISE EM LOTE
 # ======================================================
 st.subheader("📂 Análise em Lote (CSV)")
 
 arquivo = st.file_uploader(
-    "Envie um arquivo CSV com a coluna 'text'",
-    type=["csv"]
+    "Envie seu arquivo CSV (deve ter a coluna 'text')",
+    type=["csv"],
+    help="O arquivo precisa ter pelo menos uma coluna chamada 'text'"
 )
 
 if arquivo is not None:
-    df = pd.read_csv(arquivo)
+    try:
+        df = pd.read_csv(arquivo)
+        
+        if "text" not in df.columns:
+            st.error("O arquivo CSV precisa conter a coluna chamada **'text'** (com 't' minúsculo).")
+        else:
+            with st.spinner("Analisando os prompts..."):
+                resultados = []
+                for texto in df["text"]:
+                    risco, metodo = classificar_risco(str(texto))
+                    resultados.append({
+                        "texto_original": texto,
+                        "risco_detectado": risco,
+                        "metodo": metodo
+                    })
+                
+                df_resultado = pd.DataFrame(resultados)
+                
+                st.success(f"Análise concluída! {len(df_resultado)} prompts processados.")
+                st.dataframe(df_resultado, use_container_width=True)
+                
+                # Distribuição simples
+                st.subheader("📊 Distribuição dos Riscos")
+                st.bar_chart(df_resultado["risco_detectado"].value_counts())
+                
+                # Botão de download
+                csv = df_resultado.to_csv(index=False).encode('utf-8')
+                st.download_button(
+                    label="📥 Baixar resultado (CSV)",
+                    data=csv,
+                    file_name="analise_risco_ia.csv",
+                    mime="text/csv"
+                )
+                
+    except Exception as e:
+        st.error(f"Erro ao processar o arquivo: {str(e)}")
 
-    if "text" not in df.columns:
-        st.error("O arquivo CSV deve conter a coluna 'text'.")
-    else:
-        resultados = []
-
-        for texto in df["text"]:
-            risco, metodo = classificar_risco(str(texto))
-            resultados.append({
-                "text": texto,
-                "risco_detectado": risco,
-                "metodo": metodo
-            })
-
-        df_resultado = pd.DataFrame(resultados)
-
-        st.dataframe(df_resultado)
-
-        # GRÁFICO
-        st.subheader("📊 Distribuição dos riscos")
-        contagem = df_resultado["risco_detectado"].value_counts()
-        st.bar_chart(contagem)
-
-        # DOWNLOAD
-        st.download_button(
-            "📥 Baixar resultado",
-            df_resultado.to_csv(index=False).encode("utf-8"),
-            "resultado_analise_risco.csv",
-            "text/csv"
-        )
+st.markdown("---")
+st.caption("Detector de Risco IA v1.0 • Barra Mansa/RJ • 2026")
