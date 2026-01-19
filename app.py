@@ -2,11 +2,36 @@ import streamlit as st
 import pandas as pd
 import joblib
 import re
+import base64
+from pathlib import Path
+
+def set_background(image_file):
+    img_path = Path(image_file)
+    if not img_path.exists():
+        return  # se não achar a imagem, não quebra o app
+
+    with open(img_path, "rb") as f:
+        encoded = base64.b64encode(f.read()).decode()
+
+    st.markdown(
+        f"""
+        <style>
+        .stApp {{
+            background-image: url("data:image/jpg;base64,{encoded}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
 st.set_page_config(
     page_title="Detector de Risco no Uso de IA",
     layout="centered"
 )
+set_background("fundo.jpg")
 
 st.title("🔐 Detector de Risco no Uso de IA")
 st.write(
