@@ -48,26 +48,45 @@ def classificar_risco(texto):
     risco_nlp = model.predict(texto_vec)[0]
 
     return risco_nlp, "nlp"
-st.subheader("📝 Análise de texto único")
-
-texto_usuario = st.text_area(
-    "Digite o prompt para análise:",
-    height=120
-)
-
-if st.button("Analisar texto"):
-    if texto_usuario.strip() == "":
-        st.warning("Digite um texto para análise.")
-    else:
-        risco, metodo = classificar_risco(texto_usuario)
-
-        st.success(f"🔎 Risco identificado: **{risco}**")
-        st.caption(f"Método utilizado: {metodo.upper()}")
 st.subheader("📂 Análise em lote (CSV)")
 
 arquivo = st.file_uploader(
     "Envie um arquivo CSV com a coluna 'text'",
     type=["csv"]
+)
+
+if arquivo is not None:
+    df = pd.read_csv(arquivo)
+
+    if "text" not in df.columns:
+        st.error("O arquivo CSV deve conter a coluna 'text'.")
+    else:
+        resultados = []
+
+        for texto in df["text"]:
+            risco, metodo = classificar_risco(str(texto))
+            resultados.append({
+                "text": texto,
+                "risco_detectado": risco,
+                "metodo": metodo
+            })
+
+        df_resultado = pd.DataFrame(resultados)
+
+        st.dataframe(df_resultado)
+
+        # 🔽 GRÁFICO SÓ EXISTE SE HOUVER CSV
+        st.subheader("📊 Distribuição dos riscos")
+        contagem_riscos = df_resultado["risco_detectado"].value_counts()
+        st.bar_chart(contagem_riscos)
+
+        st.download_button(
+            "📥 Baixar resultado",
+            df_resultado.to_csv(index=False).encode("utf-8"),
+            "resultado_analise_risco.csv",
+            "text/csv"
+        )
+
 )
 
 if arquivo is not None:
