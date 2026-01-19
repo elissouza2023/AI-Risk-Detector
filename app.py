@@ -96,3 +96,11 @@ if arquivo is not None:
             file_name="resultado_analise_risco.csv",
             mime="text/csv"
         )
+
+
+df_resultado = pd.DataFrame(resultados)
+st.subheader("📊 Distribuição dos riscos")
+
+contagem_riscos = df_resultado["risco_detectado"].value_counts()
+
+st.bar_chart(contagem_riscos)
