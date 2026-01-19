@@ -108,6 +108,9 @@ Funcionalidades:
 - Produto **funcional e demonstrável** (não apenas teórico)
 - Continuidade com projeto anterior (**Kaida Search**)
 
+## Deploy
+https://ai-risk-detector.streamlit.app/
+
 ## Instalação e Execução Local
 ```bash
 # 1. Clone o repositório
