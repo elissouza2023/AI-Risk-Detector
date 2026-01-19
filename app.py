@@ -19,7 +19,7 @@ st.set_page_config(
 def set_background(image_file):
     img_path = Path(image_file)
     if not img_path.exists():
-        return  # não quebra o app se não achar a imagem
+        return  # não quebra o app se a imagem não existir
 
     with open(img_path, "rb") as f:
         encoded = base64.b64encode(f.read()).decode()
@@ -34,34 +34,26 @@ def set_background(image_file):
             background-attachment: fixed;
         }}
 
-        /* Texto geral */
+        /* CONTAINER PRINCIPAL */
+        .block-container {{
+            background-color: rgba(0, 0, 0, 0.70);
+            padding: 2rem;
+            border-radius: 12px;
+        }}
+
         html, body, [class*="css"] {{
             color: #EAF2F8;
         }}
 
-        /* Títulos */
         h1, h2, h3 {{
             color: #00E5FF;
         }}
 
-        /* Inputs */
         textarea, input {{
-            background-color: rgba(0, 0, 0, 0.6) !important;
+            background-color: rgba(20, 20, 20, 0.9) !important;
             color: #EAF2F8 !important;
         }}
 
-        /* Upload */
-        .stFileUploader {{
-            background-color: rgba(0, 0, 0, 0.6);
-            color: #EAF2F8;
-        }}
-
-        /* DataFrame */
-        [data-testid="stDataFrame"] {{
-            background-color: rgba(0, 0, 0, 0.6);
-        }}
-
-        /* Botões */
         .stButton>button {{
             background-color: #00E5FF;
             color: #003344;
@@ -76,12 +68,13 @@ def set_background(image_file):
 set_background("fundo.jpg")
 
 # ======================================================
-# TÍTULO
+# TÍTULO E DESCRIÇÃO
 # ======================================================
 st.title("🔐 Detector de Risco no Uso de IA")
 st.write(
     "Esta ferramenta analisa prompts e identifica riscos relacionados "
-    "ao uso de Inteligência Artificial em ambientes corporativos."
+    "ao uso de Inteligência Artificial em ambientes corporativos, "
+    "combinando regras de segurança (Regex) e NLP."
 )
 
 # ======================================================
@@ -96,24 +89,27 @@ def carregar_modelos():
 model, vectorizer = carregar_modelos()
 
 # ======================================================
-# REGEX
+# REGEX – DETECÇÃO DIRETA
 # ======================================================
 def detectar_risco_regex(texto):
     texto = texto.lower()
 
+    # CPF
     if re.search(r'\b\d{3}\.\d{3}\.\d{3}-\d{2}\b', texto):
         return "dado_pessoal"
 
+    # Email
     if re.search(r'\b[\w\.-]+@[\w\.-]+\.\w+\b', texto):
         return "dado_pessoal"
 
+    # Credenciais
     if re.search(r'\b(senha|password|token|api key|credencial)\b', texto):
         return "credencial"
 
     return "baixo_risco"
 
 # ======================================================
-# CLASSIFICAÇÃO FINAL
+# CLASSIFICAÇÃO FINAL (REGEX + NLP)
 # ======================================================
 def classificar_risco(texto):
     risco_regex = detectar_risco_regex(texto)
@@ -127,9 +123,32 @@ def classificar_risco(texto):
     return risco_nlp, "nlp"
 
 # ======================================================
-# INTERFACE – CSV
+# ANÁLISE DE PROMPT ÚNICO
 # ======================================================
-st.subheader("📂 Análise em lote (CSV)")
+st.subheader("✍️ Análise de Prompt Único")
+
+texto_usuario = st.text_area(
+    "Digite um prompt para análise de risco:",
+    height=150
+)
+
+if st.button("🔍 Analisar Prompt"):
+    if texto_usuario.strip() == "":
+        st.warning("Digite um texto para análise.")
+    else:
+        risco, metodo = classificar_risco(texto_usuario)
+
+        if risco == "baixo_risco":
+            st.success(f"✅ Risco detectado: {risco} (via {metodo})")
+        elif risco == "credencial":
+            st.warning(f"⚠️ Risco detectado: {risco} (via {metodo})")
+        else:
+            st.error(f"🚨 Risco detectado: {risco} (via {metodo})")
+
+# ======================================================
+# ANÁLISE EM LOTE (CSV)
+# ======================================================
+st.subheader("📂 Análise em Lote (CSV)")
 
 arquivo = st.file_uploader(
     "Envie um arquivo CSV com a coluna 'text'",
