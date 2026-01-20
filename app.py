@@ -43,13 +43,13 @@ def aplicar_estilo():
             }}
 
             /* Container principal */
-           .block-container {
+           .block-container {{
                 background-color: #0f172a;
                 border-radius: 22px;
                 padding: 3rem;
                 max-width: 1100px;
                 margin-top: 2rem;
-            }
+            }}
 
 
             /* TÍTULO PRINCIPAL */
