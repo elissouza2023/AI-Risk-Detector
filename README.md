@@ -114,7 +114,7 @@ https://ai-risk-detector.streamlit.app/
 ## Instalação e Execução Local
 ```bash
 # 1. Clone o repositório
-git clone https://github.com/SEU-USUARIO/kaida-ai-risk-detector.git
+git clone https://github.com/elissouza2023/AI-Risk-Detector.git
 cd kaida-ai-risk-detector
 
 # 2. Instale as dependências
