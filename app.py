@@ -9,121 +9,70 @@ from pathlib import Path
 # CONFIGURAÇÃO INICIAL DA PÁGINA
 # ======================================================
 st.set_page_config(
-    page_title="Detector de Risco no Uso de IA",
+    page_title="Detector de Risco no Uso de IA em Ambiente Corporativo",
     page_icon="🔐",
     layout="centered",
     initial_sidebar_state="auto"
 )
 
+def get_base64_image(image_path):
+    with open(image_path, "rb") as img_file:
+        return base64.b64encode(img_file.read()).decode()
+
 # ======================================================
 # ESTILIZAÇÃO (Dark mode com bom contraste)
 # ======================================================
 def aplicar_estilo():
+    bg_image = get_base64_image("fundo.jpg")
+
     st.markdown(
-        """
+        f"""
         <style>
-            /* Fundo principal com imagem */
-            .stApp {
-                background: 
-                    linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)),
-                    url("fundo.jpg");
+            /* Fundo com imagem (Cloud-safe) */
+            .stApp {{
+                background-image:
+                    linear-gradient(rgba(15,23,42,0.85), rgba(15,23,42,0.85)),
+                    url("data:image/jpg;base64,{bg_image}");
                 background-size: cover;
                 background-position: center;
                 background-attachment: fixed;
-            }
+            }}
 
-            /* Container principal - efeito vidro fosco */
-            .block-container {
-                background: rgba(30, 41, 59, 0.88);
-                backdrop-filter: blur(14px);
-                -webkit-backdrop-filter: blur(14px);
+            /* Container */
+            .block-container {{
+                background: rgba(30,41,59,0.9);
+                backdrop-filter: blur(12px);
                 border-radius: 20px;
-                border: 1px solid rgba(148, 163, 184, 0.25);
-                padding: 3rem 3rem;
-                box-shadow: 0 15px 40px rgba(0,0,0,0.6);
-                margin: 2rem auto;
-                max-width: 1100px !important;
-            }
+                padding: 3rem;
+                max-width: 1100px;
+                margin-top: 2rem;
+            }}
 
-            /* Textos gerais */
-            html, body, [class*="css"], p, div, span, label, .stMarkdown {
-                color: #e5e7eb !important;
-                font-size: 1.05rem;
-            }
-
-            /* ===== TÍTULO PRINCIPAL ===== */
-            h1 {
-                color: #60a5fa !important;
+            /* TÍTULO PRINCIPAL */
+            div[data-testid="stMarkdownContainer"] h1 {{
                 font-size: 3.2rem !important;
                 font-weight: 700 !important;
                 text-align: center;
-                margin-bottom: 1.5rem;
-            }
+                color: #60a5fa !important;
+            }}
 
-            /* ===== SUBTÍTULOS (seções) ===== */
-            h2 {
-                color: #93c5fd !important;
-                font-size: 2.2rem !important;
+            /* SUBTÍTULOS */
+            div[data-testid="stMarkdownContainer"] h2 {{
+                font-size: 2.1rem !important;
                 font-weight: 600 !important;
+                color: #93c5fd !important;
                 margin-top: 2.5rem;
-            }
+            }}
 
-            h3 {
-                color: #bfdbfe !important;
-                font-size: 1.6rem !important;
-                font-weight: 500 !important;
-            }
-
-            /* Campo de texto */
-            .stTextArea textarea {
-                background-color: #1e293b !important;
-                color: #f8fafc !important;
-                border: 1px solid #475569 !important;
-                border-radius: 10px;
-                font-size: 1.1rem;
-                padding: 14px !important;
-            }
-
-            .stTextArea textarea:focus {
-                border-color: #60a5fa !important;
-                box-shadow: 0 0 0 3px rgba(96,165,250,0.35) !important;
-            }
-
-            /* Botão principal */
-            .stButton > button {
-                background-color: #0284c7 !important;
-                color: white !important;
-                border: none;
-                border-radius: 10px;
-                padding: 0.8rem 2rem;
-                font-weight: 600;
-                font-size: 1.15rem;
-                transition: all 0.2s;
-            }
-
-            .stButton > button:hover {
-                background-color: #0369a1 !important;
-                transform: translateY(-2px);
-            }
-
-            /* Alertas */
-            .stAlert {
-                border-radius: 12px;
-                background-color: rgba(30, 41, 59, 0.95) !important;
-                border-left-width: 6px !important;
-            }
-
-            .stSuccess { border-left-color: #22c55e !important; }
-            .stWarning { border-left-color: #f59e0b !important; }
-            .stError   { border-left-color: #ef4444 !important; }
-
-            div.stAlert > div {
-                color: #f9fafb !important;
-            }
+            /* Labels */
+            label {{
+                font-size: 1.1rem !important;
+            }}
         </style>
         """,
         unsafe_allow_html=True
     )
+
 aplicar_estilo()
 
 # ======================================================
