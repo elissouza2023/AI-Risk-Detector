@@ -97,6 +97,22 @@ def aplicar_estilo():
                 color: #1e293b !important;
             }}
 
+            /* Botão de Download (Baixar resultado) */
+            div[data-testid="stDownloadButton"] > button {{
+                background-color: #FFA500 !important;
+                color: #1e293b !important;
+                border: none;
+                border-radius: 10px;
+                padding: 0.75rem 1.8rem;
+                font-size: 1.1rem;
+                font-weight: 600;
+            }}
+
+            /* Hover do botão de Download */
+            div[data-testid="stDownloadButton"] > button:hover {{
+                background-color: #FFDBBB !important;
+                color: #1e293b !important;
+            }}
 
         </style>
         """,
