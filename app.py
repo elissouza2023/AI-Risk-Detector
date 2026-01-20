@@ -93,7 +93,7 @@ def aplicar_estilo():
 
             /* Efeito hover */
             .stButton > button:hover {{
-                background-color: #fcd7a0 !important;
+                background-color: #FFA500 !important;
                 color: #1e293b !important;
             }}
 
