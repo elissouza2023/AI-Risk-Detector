@@ -80,6 +80,24 @@ def aplicar_estilo():
                 color: #eab308 !important;
             }}
 
+            /* Botão Analisar Prompt */
+            .stButton > button {{
+                background-color: #FFDEAD !important;
+                color: #1e293b !important; /* texto escuro para contraste */
+                border: none;
+                border-radius: 10px;
+                padding: 0.75rem 1.8rem;
+                font-size: 1.1rem;
+                font-weight: 600;
+            }}
+
+            /* Efeito hover */
+            .stButton > button:hover {{
+                background-color: #fcd7a0 !important;
+                color: #1e293b !important;
+            }}
+
+
         </style>
         """,
         unsafe_allow_html=True
