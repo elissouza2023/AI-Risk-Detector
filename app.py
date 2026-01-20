@@ -22,55 +22,71 @@ def aplicar_estilo():
     st.markdown(
         """
         <style>
-            /* Fundo principal */
+            /* Fundo principal com imagem */
             .stApp {
-                background-color: #0f172a;
+                background: 
+                    linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)),
+                    url("fundo.jpg");
+                background-size: cover;
+                background-position: center;
+                background-attachment: fixed;
             }
 
             /* Container principal - efeito vidro fosco */
             .block-container {
-                background: rgba(30, 41, 59, 0.85);
-                backdrop-filter: blur(10px);
-                -webkit-backdrop-filter: blur(10px);
-                border-radius: 16px;
-                border: 1px solid rgba(148, 163, 184, 0.2);
-                padding: 2rem 2.5rem;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-                margin: 1.5rem auto;
+                background: rgba(30, 41, 59, 0.88);
+                backdrop-filter: blur(14px);
+                -webkit-backdrop-filter: blur(14px);
+                border-radius: 20px;
+                border: 1px solid rgba(148, 163, 184, 0.25);
+                padding: 3rem 3rem;
+                box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+                margin: 2rem auto;
                 max-width: 1100px !important;
             }
 
-            /* Textos gerais - alto contraste */
+            /* Textos gerais */
             html, body, [class*="css"], p, div, span, label, .stMarkdown {
-                color: #e2e8f0 !important;
+                color: #e5e7eb !important;
                 font-size: 1.05rem;
             }
 
-            /* Títulos */
+            /* ===== TÍTULO PRINCIPAL ===== */
             h1 {
                 color: #60a5fa !important;
-                font-weight: 600;
+                font-size: 3.2rem !important;
+                font-weight: 700 !important;
+                text-align: center;
+                margin-bottom: 1.5rem;
             }
+
+            /* ===== SUBTÍTULOS (seções) ===== */
             h2 {
                 color: #93c5fd !important;
+                font-size: 2.2rem !important;
+                font-weight: 600 !important;
+                margin-top: 2.5rem;
             }
+
             h3 {
                 color: #bfdbfe !important;
+                font-size: 1.6rem !important;
+                font-weight: 500 !important;
             }
 
             /* Campo de texto */
-            .stTextArea > div > div > textarea {
+            .stTextArea textarea {
                 background-color: #1e293b !important;
-                color: #f1f5f9 !important;
+                color: #f8fafc !important;
                 border: 1px solid #475569 !important;
-                border-radius: 8px;
-                font-size: 1.05rem;
-                padding: 12px !important;
+                border-radius: 10px;
+                font-size: 1.1rem;
+                padding: 14px !important;
             }
 
-            .stTextArea > div > div > textarea:focus {
+            .stTextArea textarea:focus {
                 border-color: #60a5fa !important;
-                box-shadow: 0 0 0 3px rgba(96,165,250,0.3) !important;
+                box-shadow: 0 0 0 3px rgba(96,165,250,0.35) !important;
             }
 
             /* Botão principal */
@@ -78,10 +94,10 @@ def aplicar_estilo():
                 background-color: #0284c7 !important;
                 color: white !important;
                 border: none;
-                border-radius: 8px;
-                padding: 0.7rem 1.5rem;
+                border-radius: 10px;
+                padding: 0.8rem 2rem;
                 font-weight: 600;
-                font-size: 1.1rem;
+                font-size: 1.15rem;
                 transition: all 0.2s;
             }
 
@@ -90,31 +106,24 @@ def aplicar_estilo():
                 transform: translateY(-2px);
             }
 
-            /* Alertas com melhor contraste */
+            /* Alertas */
             .stAlert {
-                border-radius: 10px;
-                background-color: rgba(30, 41, 59, 0.9) !important;
-                border-left-width: 5px !important;
-            }
-            .stSuccess {
-                border-left-color: #22c55e !important;
-            }
-            .stWarning {
-                border-left-color: #f59e0b !important;
-            }
-            .stError {
-                border-left-color: #ef4444 !important;
+                border-radius: 12px;
+                background-color: rgba(30, 41, 59, 0.95) !important;
+                border-left-width: 6px !important;
             }
 
-            /* Ajuste em textos dentro dos alertas */
+            .stSuccess { border-left-color: #22c55e !important; }
+            .stWarning { border-left-color: #f59e0b !important; }
+            .stError   { border-left-color: #ef4444 !important; }
+
             div.stAlert > div {
-                color: #f1f5f9 !important;
+                color: #f9fafb !important;
             }
         </style>
         """,
         unsafe_allow_html=True
     )
-
 aplicar_estilo()
 
 # ======================================================
