@@ -94,10 +94,7 @@ st.title("🔐 Detector de Risco no Uso de IA")
 
 st.markdown(
     """
-    Esta ferramenta analisa prompts e identifica riscos relacionados  
-    ao uso de Inteligência Artificial em ambientes corporativos,  
-    combinando **regras de segurança (Regex)** e **modelo de NLP**.
-    """
+    Esta ferramenta analisa prompts e identifica riscos relacionados ao uso de Inteligência Artificial em ambientes corporativos, combinando **regras de segurança (Regex)** e **modelo de NLP**."""
 )
 
 # ======================================================
