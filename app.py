@@ -43,14 +43,13 @@ def aplicar_estilo():
             }}
 
             /* Container principal */
-           .block-container {{
+            .block-container {{
                 background-color: #0f172a;
                 border-radius: 22px;
                 padding: 3rem;
                 max-width: 1100px;
                 margin-top: 2rem;
             }}
-
 
             /* TÍTULO PRINCIPAL */
             div[data-testid="stMarkdownContainer"] h1 {{
@@ -64,26 +63,38 @@ def aplicar_estilo():
             div[data-testid="stMarkdownContainer"] h2 {{
                 font-size: 2.1rem !important;
                 font-weight: 600 !important;
-                color: #93c5fd !important;
+                color: #eab308 !important;
                 margin-top: 2.5rem;
             }}
 
-            /* Labels */
+            /* Labels e textos gerais */
             label {{
                 font-size: 1.1rem !important;
                 color: #e5e7eb !important;
             }}
+
             p, span, label {{
                 color: #e5e7eb !important;
             }}
-            div[data-testid="stMarkdownContainer"] h2 {{
-                color: #eab308 !important;
+
+            /* ============================
+               ALERTAS / RESULTADOS
+               (AJUSTE DE CONTRASTE)
+            ============================ */
+            div[data-testid="stAlert"] {{
+                color: white !important;
+            }}
+
+            div[data-testid="stAlert"] p {{
+                color: white !important;
+                font-weight: 500;
+                font-size: 1rem;
             }}
 
             /* Botão Analisar Prompt */
             .stButton > button {{
                 background-color: #FFA500 !important;
-                color: #1e293b !important; /* texto escuro para contraste */
+                color: #1e293b !important;
                 border: none;
                 border-radius: 10px;
                 padding: 0.75rem 1.8rem;
@@ -91,13 +102,12 @@ def aplicar_estilo():
                 font-weight: 600;
             }}
 
-            /* Efeito hover */
             .stButton > button:hover {{
-                background-color: #FFDBBB  !important;
+                background-color: #FFDBBB !important;
                 color: #1e293b !important;
             }}
 
-            /* Botão de Download (Baixar resultado) */
+            /* Botão de Download */
             div[data-testid="stDownloadButton"] > button {{
                 background-color: #FFA500 !important;
                 color: #1e293b !important;
@@ -108,12 +118,10 @@ def aplicar_estilo():
                 font-weight: 600;
             }}
 
-            /* Hover do botão de Download */
             div[data-testid="stDownloadButton"] > button:hover {{
                 background-color: #FFDBBB !important;
                 color: #1e293b !important;
             }}
-
         </style>
         """,
         unsafe_allow_html=True
@@ -128,7 +136,8 @@ st.title("🔐 Detector de Risco no Uso de IA")
 
 st.markdown(
     """
-    Esta ferramenta analisa prompts e identifica riscos relacionados ao uso de Inteligência Artificial em ambientes corporativos, combinando **regras de segurança (Regex)** e **modelo de NLP**."""
+    Esta ferramenta analisa prompts e identifica riscos relacionados ao uso de Inteligência Artificial em ambientes corporativos, combinando **regras de segurança (Regex)** e **modelo de NLP**.
+    """
 )
 
 # ======================================================
@@ -185,7 +194,7 @@ def classificar_risco(texto):
         return "erro", "nlp"
 
 # ======================================================
-# BADGE DE RISCO (MELHORIA 1)
+# BADGE DE RISCO
 # ======================================================
 def badge_risco(risco, metodo):
     cores = {
@@ -220,6 +229,7 @@ def badge_risco(risco, metodo):
             margin-top: 1.5rem;
             font-size: 1.15rem;
             font-weight: 600;
+            color: white;
         ">
             {icone} <b>{texto}</b><br>
             <span style="font-size: 0.95rem; opacity: 0.85;">
@@ -295,4 +305,3 @@ if arquivo is not None:
 
 st.markdown("---")
 st.caption("Detector de Risco IA v1.0 • Barra Mansa/RJ • 2026")
-
