@@ -73,6 +73,13 @@ def aplicar_estilo():
                 font-size: 1.1rem !important;
                 color: #e5e7eb !important;
             }}
+            p, span, label {{
+                color: #e5e7eb !important;
+            }}
+            div[data-testid="stMarkdownContainer"] h2 {{
+                color: #eab308 !important;
+            }}
+
         </style>
         """,
         unsafe_allow_html=True
