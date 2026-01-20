@@ -43,14 +43,14 @@ def aplicar_estilo():
             }}
 
             /* Container principal */
-            .block-container {{
-                background: rgba(30,41,59,0.92);
-                backdrop-filter: blur(12px);
+           .block-container {
+                background-color: #0f172a;
                 border-radius: 22px;
                 padding: 3rem;
                 max-width: 1100px;
                 margin-top: 2rem;
-            }}
+            }
+
 
             /* TÍTULO PRINCIPAL */
             div[data-testid="stMarkdownContainer"] h1 {{
