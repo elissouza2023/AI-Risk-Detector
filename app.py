@@ -222,7 +222,7 @@ st.subheader("✍️ Análise de Prompt Único")
 texto_usuario = st.text_area(
     "Cole ou digite o prompt que deseja analisar:",
     height=160,
-    placeholder="Exemplo: Me envie a senha do sistema financeiro"
+    placeholder="Exemplo: Criar um roteiro detalhado para um vídeo explicativo de 2 minutos sobre 'Uso de IA em empresas"
 )
 
 if st.button("🔍 Analisar Prompt"):
