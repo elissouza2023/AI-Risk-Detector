@@ -82,7 +82,7 @@ def aplicar_estilo():
 
             /* Botão Analisar Prompt */
             .stButton > button {{
-                background-color: #FFDEAD !important;
+                background-color: #FFA500 !important;
                 color: #1e293b !important; /* texto escuro para contraste */
                 border: none;
                 border-radius: 10px;
