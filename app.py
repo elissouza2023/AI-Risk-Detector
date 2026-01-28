@@ -28,6 +28,7 @@ def get_base64_image(image_path):
 # ======================================================
 def aplicar_estilo():
     bg_image = get_base64_image("fundo.jpg")
+    logo_image = get_base64_image("logo.png")
 
     st.markdown(
         f"""
@@ -51,6 +52,19 @@ def aplicar_estilo():
                 margin-top: 2rem;
             }}
 
+            /* LOGO NO CANTO SUPERIOR DIREITO */
+            .logo-top-right {{
+                position: fixed;
+                top: 20px;
+                right: 25px;
+                z-index: 1000;
+            }}
+
+            .logo-top-right img {{
+                width: 110px;
+                opacity: 0.95;
+            }}
+
             /* TÍTULO PRINCIPAL */
             div[data-testid="stMarkdownContainer"] h1 {{
                 font-size: 3rem !important;
@@ -67,20 +81,12 @@ def aplicar_estilo():
                 margin-top: 2.5rem;
             }}
 
-            /* Labels e textos gerais */
-            label {{
-                font-size: 1.1rem !important;
+            /* Labels e textos */
+            label, p, span {{
                 color: #e5e7eb !important;
             }}
 
-            p, span, label {{
-                color: #e5e7eb !important;
-            }}
-
-            /* ============================
-               ALERTAS / RESULTADOS
-               (AJUSTE DE CONTRASTE)
-            ============================ */
+            /* ALERTAS */
             div[data-testid="stAlert"] {{
                 color: white !important;
             }}
@@ -88,26 +94,10 @@ def aplicar_estilo():
             div[data-testid="stAlert"] p {{
                 color: white !important;
                 font-weight: 500;
-                font-size: 1rem;
             }}
 
-            /* Botão Analisar Prompt */
-            .stButton > button {{
-                background-color: #FFA500 !important;
-                color: #1e293b !important;
-                border: none;
-                border-radius: 10px;
-                padding: 0.75rem 1.8rem;
-                font-size: 1.1rem;
-                font-weight: 600;
-            }}
-
-            .stButton > button:hover {{
-                background-color: #FFDBBB !important;
-                color: #1e293b !important;
-            }}
-
-            /* Botão de Download */
+            /* Botões */
+            .stButton > button,
             div[data-testid="stDownloadButton"] > button {{
                 background-color: #FFA500 !important;
                 color: #1e293b !important;
@@ -118,11 +108,16 @@ def aplicar_estilo():
                 font-weight: 600;
             }}
 
+            .stButton > button:hover,
             div[data-testid="stDownloadButton"] > button:hover {{
                 background-color: #FFDBBB !important;
                 color: #1e293b !important;
             }}
         </style>
+
+        <div class="logo-top-right">
+            <img src="data:image/png;base64,{logo_image}">
+        </div>
         """,
         unsafe_allow_html=True
     )
@@ -136,7 +131,8 @@ st.title("🔐 Detector de Risco no Uso de IA")
 
 st.markdown(
     """
-    Esta ferramenta analisa prompts e identifica riscos relacionados ao uso de Inteligência Artificial em ambientes corporativos, combinando **regras de segurança (Regex)** e **modelo de NLP**.
+    Esta ferramenta analisa prompts e identifica riscos relacionados ao uso de Inteligência Artificial
+    em ambientes corporativos, combinando **regras de segurança (Regex)** e **modelo de NLP**.
     """
 )
 
