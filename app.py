@@ -300,4 +300,4 @@ if arquivo is not None:
         st.error(f"Erro ao processar o arquivo: {str(e)}")
 
 st.markdown("---")
-st.caption("Detector de Risco IA v1.0 • Barra Mansa/RJ • 2026")
+st.caption("Detector de Risco IA v1.0 • Elisângela de Souza • 2026")
